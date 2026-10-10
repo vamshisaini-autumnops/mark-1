@@ -1,6 +1,21 @@
+# macOS files
+.DS_Store
+
+# JavaScript dependencies and build output
 node_modules/
+dist/
+
+# Python environments and cache
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local secrets
 .env
 .env.*
-/invoices/
-/output/
-.DS_Store
+!.env.example
+
+# Generated invoice data
+*.raw.json
+*.parsed.json
