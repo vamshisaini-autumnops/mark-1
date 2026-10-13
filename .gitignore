@@ -19,3 +19,7 @@ __pycache__/
 # Generated invoice data
 *.raw.json
 *.parsed.json
+
+# Python backend local data
+backend_py/invoices/
+backend_py/output/

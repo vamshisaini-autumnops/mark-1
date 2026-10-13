@@ -4,3 +4,5 @@ node_modules/
 /invoices/
 /output/
 .DS_Store
+backend_py/invoices/
+backend_py/output/
