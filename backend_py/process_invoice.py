@@ -81,7 +81,7 @@ def process_invoice(invoice_path: Path | None = None) -> Path:
     if endpoint_parts.scheme != "https" or not endpoint_parts.netloc:
         raise RuntimeError("The Azure endpoint must be a valid HTTPS resource endpoint.")
 
-    invoice_path = Path(invoice_path) if invoice_path is not None else BASE_DIR / "invoices" / "IMG_3806.jpeg"
+    invoice_path = Path(invoice_path) if invoice_path is not None else BASE_DIR / "invoices" / "IMG_3807.jpeg"
     base64_source = base64.b64encode(invoice_path.read_bytes()).decode("ascii")
     analyze_url = f"{endpoint}/documentintelligence/documentModels/{MODEL_ID}:analyze"
     headers = {"Ocp-Apim-Subscription-Key": key}

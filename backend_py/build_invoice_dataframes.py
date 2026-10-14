@@ -70,7 +70,7 @@ def build_items_df(raw_data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("raw_file", nargs="?", type=Path,
-                        default=Path("output/invoice-1791901518087.raw.json"))
+                        default=Path("output/invoice-1791938597297.raw.json"))
     parser.add_argument("--csv", type=Path, help="Optional new CSV output path")
     args = parser.parse_args()
     raw_path = args.raw_file if args.raw_file.is_absolute() else BASE_DIR / args.raw_file
