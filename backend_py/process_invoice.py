@@ -67,8 +67,8 @@ def wait_for_result(session: requests.Session, operation_url: str, headers: dict
         time.sleep(min(POLL_INTERVAL_SECONDS, max(0, deadline - time.monotonic())))
 
 
-def process_invoice(invoice_path: Path | None = None) -> Path:
-    """Analyze the sample invoice (or a supplied path) and return the output path."""
+def analyze_invoice(file_contents: bytes) -> dict:
+    """Analyze uploaded bytes and return Azure's full operation response."""
     # Resolve configuration and default file paths relative to this script,
     # so it works even when launched from the Mark1 root.
     load_dotenv(BASE_DIR / ".env.local", override=False)
@@ -81,8 +81,7 @@ def process_invoice(invoice_path: Path | None = None) -> Path:
     if endpoint_parts.scheme != "https" or not endpoint_parts.netloc:
         raise RuntimeError("The Azure endpoint must be a valid HTTPS resource endpoint.")
 
-    invoice_path = Path(invoice_path) if invoice_path is not None else BASE_DIR / "invoices" / "IMG_3807.jpeg"
-    base64_source = base64.b64encode(invoice_path.read_bytes()).decode("ascii")
+    base64_source = base64.b64encode(file_contents).decode("ascii")
     analyze_url = f"{endpoint}/documentintelligence/documentModels/{MODEL_ID}:analyze"
     headers = {"Ocp-Apim-Subscription-Key": key}
 
@@ -109,6 +108,13 @@ def process_invoice(invoice_path: Path | None = None) -> Path:
         print("Waiting for Azure to finish processing...")
         raw_result = wait_for_result(session, operation_url, headers)
 
+    return raw_result
+
+
+def process_invoice(invoice_path: Path | None = None) -> Path:
+    """Analyze a local invoice and save Azure's full response beside this script."""
+    invoice_path = Path(invoice_path) if invoice_path is not None else BASE_DIR / "invoices" / "IMG_3807.jpeg"
+    raw_result = analyze_invoice(invoice_path.read_bytes())
     output_dir = BASE_DIR / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"invoice-{time.time_ns() // 1_000_000}.raw.json"
